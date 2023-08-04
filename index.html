@@ -57,7 +57,9 @@
 		const buttonElements = document.querySelectorAll('.like-button');
 
 		for (const buttonElement of buttonElements) {
-			buttonElement.addEventListener('click', () => {
+			buttonElement.addEventListener('click', (event) => {
+				// тормозим цепочку распростронения событий 
+				event.stopPropagation();
 				// индекс = номер обьекта в массиве, получаем из дата атрибута кнопки на которую нажимаем
 				const index = buttonElement.dataset.index;
 				// обращаемся к свойству isLaked обьекта массива, кот мы получили из массива comments по индексу
@@ -72,6 +74,25 @@
 				renderComments();
 			});
 		}
+
+		// создаю коллекцию коменнтариев
+		const answerElements = document.querySelectorAll('.comment-text');
+
+		for (const answer of answerElements) {
+			answer.addEventListener('click', (event) => {
+				event.stopPropagation();
+				const index = answer.dataset.index;
+
+				// вариант без звезды
+				nameTextAreaElement.value = `> ${comments[index].comment} \n\n ${comments[index].name}, `;
+
+				// вариант со звездой
+				// nameTextAreaElement.value = `QUOTE_BEGIN ${comments[index].comment} QUOTE_END \n\n${comments[index].name}, `;
+
+
+				// renderComments();
+			});
+		}
 	};
 
 	const renderComments = () => {
@@ -82,7 +103,7 @@
 						<div>${comment.date}</div>
 					</div>
 					<div class="comment-body">
-						<div class="comment-text">
+						<div style="white-space:pre-line" class="comment-text" data-index='${index}'>
 							${comment.comment}
 						</div>
 					</div>
@@ -131,9 +152,15 @@
 		// }
 
 		comments.push({
-			name: nameInputElement.value,
+			name: nameInputElement.value.replaceAll("&", "&amp;")
+				.replaceAll("<", "&lt;")
+				.replaceAll(">", "&gt;")
+				.replaceAll('"', "&quot;"),
 			date: nowDate,
-			comment: nameTextAreaElement.value,
+			comment: nameTextAreaElement.value.replaceAll("&", "&amp;")
+				.replaceAll("<", "&lt;")
+				.replaceAll(">", "&gt;")
+				.replaceAll('"', "&quot;"),
 			like: 0,
 			isLiked: false,
 		});
