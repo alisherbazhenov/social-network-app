@@ -84,10 +84,10 @@
 				const index = answer.dataset.index;
 
 				// вариант без звезды
-				nameTextAreaElement.value = `> ${comments[index].comment} \n\n ${comments[index].name}, `;
+				// nameTextAreaElement.value = `> ${comments[index].comment} \n\n ${comments[index].name}, `;
 
 				// вариант со звездой
-				// nameTextAreaElement.value = `QUOTE_BEGIN${comments[index].comment} \n\n${comments[index].name}QUOTE_END`;
+				nameTextAreaElement.value = `${comments[index].name}QUOTE_BEGIN${comments[index].comment}\n\nQUOTE_END`.replaceAll("QUOTE_BEGIN", "<div class='quote'>").replaceAll("QUOTE_END", "</div>");
 
 
 				// renderComments();
@@ -151,16 +151,16 @@
 		// 	return;
 		// }
 
+
+		// replaceAll("&", "&amp;")
+		// 		.replaceAll("<", "&lt;")
+		// 		.replaceAll(">", "&gt;")
+		// 		.replaceAll('"', "&quot;")
+
 		comments.push({
-			name: nameInputElement.value.replaceAll("&", "&amp;")
-				.replaceAll("<", "&lt;")
-				.replaceAll(">", "&gt;")
-				.replaceAll('"', "&quot;"),
+			name: nameInputElement.value,
 			date: nowDate,
-			comment: nameTextAreaElement.value.replaceAll("&", "&amp;")
-				.replaceAll("<", "&lt;")
-				.replaceAll(">", "&gt;")
-				.replaceAll('"', "&quot;").replaceAll("QUOTE_BEGIN", "<div class='quote'>").replaceAll("QUOTE_END", "</div>"),
+			comment: nameTextAreaElement.value,
 			like: 0,
 			isLiked: false,
 		});
