@@ -76,18 +76,18 @@
 		}
 
 		// создаю коллекцию коменнтариев
-		const answerElements = document.querySelectorAll('.comment-text');
+		const answerElements = document.querySelectorAll('.comment');
 
 		for (const answer of answerElements) {
-			answer.addEventListener('click', (event) => {
-				event.stopPropagation();
+			answer.addEventListener('click', () => {
+
 				const index = answer.dataset.index;
 
 				// вариант без звезды
 				nameTextAreaElement.value = `> ${comments[index].comment} \n\n ${comments[index].name}, `;
 
 				// вариант со звездой
-				// nameTextAreaElement.value = `QUOTE_BEGIN ${comments[index].comment} QUOTE_END \n\n${comments[index].name}, `;
+				// nameTextAreaElement.value = `QUOTE_BEGIN${comments[index].comment} \n\n${comments[index].name}QUOTE_END`;
 
 
 				// renderComments();
@@ -97,13 +97,13 @@
 
 	const renderComments = () => {
 		const commentsHtml = comments.map((comment, index) => {
-			return `<li class="comment">
+			return `<li class="comment" data-index='${index}'>
 					<div class="comment-header">
 						<div>${comment.name}</div>
 						<div>${comment.date}</div>
 					</div>
 					<div class="comment-body">
-						<div style="white-space:pre-line" class="comment-text" data-index='${index}'>
+						<div class="comment-text" style="white-space:pre-line">
 							${comment.comment}
 						</div>
 					</div>
@@ -160,7 +160,7 @@
 			comment: nameTextAreaElement.value.replaceAll("&", "&amp;")
 				.replaceAll("<", "&lt;")
 				.replaceAll(">", "&gt;")
-				.replaceAll('"', "&quot;"),
+				.replaceAll('"', "&quot;").replaceAll("QUOTE_BEGIN", "<div class='quote'>").replaceAll("QUOTE_END", "</div>"),
 			like: 0,
 			isLiked: false,
 		});
