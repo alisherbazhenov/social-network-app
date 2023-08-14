@@ -35,25 +35,48 @@
 
 
 
-	const comments = [
+	// COMMENTS нужно получать из хранилища данных
+	let comments = [
 		{
 			name: 'Глеб Фокин',
 			date: '12.02.22 12:18',
 			comment: 'Это будет первый комментарий на этой странице',
-			like: 3,
+			likes: 3,
 			isLiked: false,
+			isEdit: false,
 		},
 		{
 			name: 'Варвара Н.',
 			date: '13.02.22 19:22',
 			comment: 'Мне нравится как оформлена эта страница! ❤',
-			like: 75,
+			likes: 75,
 			isLiked: true,
+			isEdit: false,
 		},
 	];
 
 
+	// запрос GET
+	// const fetchPromise = fetch("https://wedev-api.sky.pro/api/v1/alisher-bazhenov/comments", {
+	// 	method: "GET"
+	// });
+
+	// // подписываемся на успешное завершение запроса с помощью then
+	// fetchPromise.then((response) => {
+	// 	// Запускаем преобразовываем "сырые" данные от API в json формат
+	// 	const jsonPromise = response.json();
+
+	// 	// Подписываемся на результат преобразования
+	// 	jsonPromise.then((responseData) => {
+	// 		// получили данные и рендерим их в приложении
+	// 		comments = responseData.comments;
+	// 		renderComments();
+	// 	});
+	// });
+
+
 	const initEventListeners = () => {
+
 		const buttonElements = document.querySelectorAll('.like-button');
 
 		for (const buttonElement of buttonElements) {
@@ -65,15 +88,16 @@
 				// обращаемся к свойству isLaked обьекта массива, кот мы получили из массива comments по индексу
 				if (comments[index].isLiked) {
 					comments[index].isLiked = false;
-					comments[index].like--;
+					comments[index].likes--;
 				} else {
 					comments[index].isLiked = true;
-					comments[index].like++;
+					comments[index].likes++;
 				}
 
 				renderComments();
 			});
 		}
+
 
 		// создаю коллекцию коменнтариев
 		const answerElements = document.querySelectorAll('.comment');
@@ -82,18 +106,12 @@
 			answer.addEventListener('click', () => {
 
 				const index = answer.dataset.index;
-
-				// вариант без звезды
-				// nameTextAreaElement.value = `> ${comments[index].comment} \n\n ${comments[index].name}, `;
-
 				// вариант со звездой
 				nameTextAreaElement.value = `QUOTE_BEGIN${comments[index].name}:\n${comments[index].comment}QUOTE_END`;
-
-
-				// renderComments();
 			});
 		}
 	};
+
 
 	const renderComments = () => {
 		const commentsHtml = comments.map((comment, index) => {
@@ -103,34 +121,56 @@
 						<div>${comment.date}</div>
 					</div>
 					<div class="comment-body">
-						<div class="comment-text" style="white-space:pre-line">
+						${comment.isEdit ? `<textarea class='add-form-text comment-edit-text'>${comment.comment}</textarea>` : `<div class="comment-text" style="white-space:pre-line">
 							${comment.comment}
-						</div>
+						</div>`}
 					</div>
+					<button class="add-form-button edits" data-index='${index}'>${comment.isEdit ? 'Сохранить' : 'Редактировать'}</button>
 					<div class="comment-footer">
 						<div class="likes">
-							<span class="likes-counter">${comment.like}</span>
+							<span class="likes-counter">${comment.likes}</span>
 							<button class="like-button ${comment.isLiked ? '-active-like' : ''}" data-index='${index}'>
 							</button>
-						</div >
-					</div >
-				</li >`;
+						</div>
+					</div>
+				</li>`;
 		}).join('');
 
 
 		listElement.innerHTML = commentsHtml;
 
 		initEventListeners();
+		functionEdit();
+	}
 
+	function functionEdit() {
+		const commentEditText = document.querySelector('.comment-edit-text');
+
+		const editElements = document.querySelectorAll('.edits');
+
+		for (const edit of editElements) {
+			edit.addEventListener('click', () => {
+				// event.stopPropagation();
+
+				const index = edit.dataset.index;
+				console.log(index);
+
+				if (comments[index].isEdit) {
+					comments[index].isEdit = false;
+					comments[index].comment = commentEditText.value;
+				} else {
+					comments[index].isEdit = true;
+				}
+
+				renderComments();
+			});
+		}
 	}
 
 	renderComments();
 
 	const likesElements = document.querySelectorAll('.likes');
 
-	initEventListeners();
-
-	renderComments();
 
 	btnElement.addEventListener('click', () => {
 
@@ -146,10 +186,20 @@
 			return;
 		}
 
-		// мое первое решение
-		// if (nameTextAreaElement.value === '' || nameInputElement.value === '') {
-		// 	return;
-		// }
+		// подписываемся на успешное завершение запроса с помощью then
+		// fetch("https://wedev-api.sky.pro/api/v1/alisher-bazhenov/comments", {
+		// 	method: "POST",
+		// 	body: JSON.stringify({
+		// 		text: nameTextAreaElement.value,
+		// 		name: nameInputElement.value,
+		// 	})
+		// }).then((response) => {
+		// 	response.json().then((responseData) => {
+		// 		// получили данные и рендерим их в приложении
+		// 		comments = responseData.comments;
+		// 		renderComments();
+		// 	});
+		// });
 
 
 		comments.push({
@@ -159,8 +209,9 @@
 				.replaceAll("<", "&lt;")
 				.replaceAll(">", "&gt;")
 				.replaceAll('"', "&quot;").replaceAll("QUOTE_BEGIN", "<div class='quote'>").replaceAll("QUOTE_END", "</div>"),
-			like: 0,
+			likes: 0,
 			isLiked: false,
+			isEdit: false,
 		});
 		renderComments();
 
@@ -168,7 +219,6 @@
 		nameTextAreaElement.value = '';
 
 	});
-
 
 </script>
 
