@@ -37,42 +37,56 @@
 
 	// COMMENTS нужно получать из хранилища данных
 	let comments = [
-		{
-			name: 'Глеб Фокин',
-			date: '12.02.22 12:18',
-			comment: 'Это будет первый комментарий на этой странице',
-			likes: 3,
-			isLiked: false,
-			isEdit: false,
-		},
-		{
-			name: 'Варвара Н.',
-			date: '13.02.22 19:22',
-			comment: 'Мне нравится как оформлена эта страница! ❤',
-			likes: 75,
-			isLiked: true,
-			isEdit: false,
-		},
+		// {
+		// 	name: 'Глеб Фокин',
+		// 	date: '12.02.22 12:18',
+		// 	comment: 'Это будет первый комментарий на этой странице',
+		// 	likes: 3,
+		// 	isLiked: false,
+		// 	isEdit: false,
+		// },
+		// {
+		// 	name: 'Варвара Н.',
+		// 	date: '13.02.22 19:22',
+		// 	comment: 'Мне нравится как оформлена эта страница! ❤',
+		// 	likes: 75,
+		// 	isLiked: true,
+		// 	isEdit: false,
+		// },
 	];
 
 
 	// запрос GET
-	// const fetchPromise = fetch("https://wedev-api.sky.pro/api/v1/alisher-bazhenov/comments", {
-	// 	method: "GET"
-	// });
+	const fetchPromise = fetch("https://wedev-api.sky.pro/api/v1/alisher-bazhenov/comments", {
+		method: "GET"
+	});
 
-	// // подписываемся на успешное завершение запроса с помощью then
-	// fetchPromise.then((response) => {
-	// 	// Запускаем преобразовываем "сырые" данные от API в json формат
-	// 	const jsonPromise = response.json();
+	// подписываемся на успешное завершение запроса с помощью then
+	fetchPromise.then((response) => {
+		// Запускаем преобразовываем "сырые" данные от API в json формат
+		const jsonPromise = response.json();
 
-	// 	// Подписываемся на результат преобразования
-	// 	jsonPromise.then((responseData) => {
-	// 		// получили данные и рендерим их в приложении
-	// 		comments = responseData.comments;
-	// 		renderComments();
-	// 	});
-	// });
+		// Подписываемся на результат преобразования
+		jsonPromise.then((responseData) => {
+
+			const appComments = responseData.comments.map((comment) => {
+				return {
+					name: comment.author.name,
+					date: comment.date,
+					likes: comment.likes,
+					isLiked: false,
+					text: comment.text,
+				};
+			});
+
+			// получили данные и рендерим их в приложении
+			comments = appComments;
+
+			// получили данные и рендерим их в приложении
+			// comments = responseData.comments;
+			renderComments();
+		});
+	});
 
 
 	const initEventListeners = () => {
@@ -117,12 +131,22 @@
 		const commentsHtml = comments.map((comment, index) => {
 			return `<li class="comment" data-index='${index}'>
 					<div class="comment-header">
-						<div>${comment.name}</div>
+						<div>${comment.name.replaceAll("&", "&amp;")
+					.replaceAll("<", "&lt;")
+					.replaceAll(">", "&gt;")
+					.replaceAll('"', "&quot;")
+					.replaceAll("QUOTE_BEGIN", "<div class='quote'>")
+					.replaceAll("QUOTE_END", "</div>")}</div>
 						<div>${comment.date}</div>
 					</div>
 					<div class="comment-body">
-						${comment.isEdit ? `<textarea class='add-form-text comment-edit-text'>${comment.comment}</textarea>` : `<div class="comment-text" style="white-space:pre-line">
-							${comment.comment}
+						${comment.isEdit ? `<textarea class='add-form-text comment-edit-text'>${comment.text.replaceAll("&", "&amp;")
+					.replaceAll("<", "&lt;")
+					.replaceAll(">", "&gt;")
+					.replaceAll('"', "&quot;")
+					.replaceAll("QUOTE_BEGIN", "<div class='quote'>")
+					.replaceAll("QUOTE_END", "</div>")}</textarea>` : `<div class="comment-text" style="white-space:pre-line">
+							${comment.text}
 						</div>`}
 					</div>
 					<button class="add-form-button edits" data-index='${index}'>${comment.isEdit ? 'Сохранить' : 'Редактировать'}</button>
@@ -187,32 +211,32 @@
 		}
 
 		// подписываемся на успешное завершение запроса с помощью then
-		// fetch("https://wedev-api.sky.pro/api/v1/alisher-bazhenov/comments", {
-		// 	method: "POST",
-		// 	body: JSON.stringify({
-		// 		text: nameTextAreaElement.value,
-		// 		name: nameInputElement.value,
-		// 	})
-		// }).then((response) => {
-		// 	response.json().then((responseData) => {
-		// 		// получили данные и рендерим их в приложении
-		// 		comments = responseData.comments;
-		// 		renderComments();
-		// 	});
+		fetch("https://wedev-api.sky.pro/api/v1/alisher-bazhenov/comments", {
+			method: "POST",
+			body: JSON.stringify({
+				text: nameTextAreaElement.value,
+				name: nameInputElement.value,
+			})
+		}).then((response) => {
+			response.json().then((responseData) => {
+				// получили данные и рендерим их в приложении
+				comments = responseData.comments;
+				renderComments();
+			});
+		});
+
+		// comments.push({
+		// 	name: nameInputElement.value,
+		// 	date: nowDate,
+		// 	comment: nameTextAreaElement.value.replaceAll("&", "&amp;")
+		// 		.replaceAll("<", "&lt;")
+		// 		.replaceAll(">", "&gt;")
+		// 		.replaceAll('"', "&quot;").replaceAll("QUOTE_BEGIN", "<div class='quote'>").replaceAll("QUOTE_END", "</div>"),
+		// 	likes: 0,
+		// 	isLiked: false,
+		// 	isEdit: false,
 		// });
 
-
-		comments.push({
-			name: nameInputElement.value,
-			date: nowDate,
-			comment: nameTextAreaElement.value.replaceAll("&", "&amp;")
-				.replaceAll("<", "&lt;")
-				.replaceAll(">", "&gt;")
-				.replaceAll('"', "&quot;").replaceAll("QUOTE_BEGIN", "<div class='quote'>").replaceAll("QUOTE_END", "</div>"),
-			likes: 0,
-			isLiked: false,
-			isEdit: false,
-		});
 		renderComments();
 
 		nameInputElement.value = '';
