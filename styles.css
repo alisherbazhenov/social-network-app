@@ -143,6 +143,13 @@ body {
 .quote {
   padding: 10px;
   font-size: 18px;
-  background-color: white;
+  border-radius: 18px;
+  background-color: rgb(130, 143, 131);
   color: black;
+}
+
+.comment-edit-text {
+  background-color: #bcec30;
+  margin: 0;
+  outline: none;
 }
