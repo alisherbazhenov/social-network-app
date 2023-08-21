@@ -10,8 +10,10 @@
 
 <body>
 	<div class="container">
+		<div id="container-preloader"></div>
 		<ul class="comments" id="list">
 		</ul>
+		<div id="container-preloader-post"></div>
 		<div class="add-form">
 			<input type="text" class="add-form-name" placeholder="Введите ваше имя" value="" />
 			<textarea type="textarea" class="add-form-text" placeholder="Введите ваш коментарий" rows="4">
@@ -32,54 +34,41 @@
 	const nowDate = myDate + ' ' + new Date().toLocaleTimeString().slice(0, -3);
 
 	const listElement = document.getElementById('list');
-
+	const containerPreloader = document.getElementById('container-preloader');
+	const containerPreloaderPost = document.getElementById('container-preloader-post');
+	const addFormElement = document.querySelector('.add-form');
 
 
 	// COMMENTS нужно получать из хранилища данных
-	let comments = [
-		// {
-		// 	name: 'Глеб Фокин',
-		// 	date: '12.02.22 12:18',
-		// 	comment: 'Это будет первый комментарий на этой странице',
-		// 	likes: 3,
-		// 	isLiked: false,
-		// 	isEdit: false,
-		// },
-		// {
-		// 	name: 'Варвара Н.',
-		// 	date: '13.02.22 19:22',
-		// 	comment: 'Мне нравится как оформлена эта страница! ❤',
-		// 	likes: 75,
-		// 	isLiked: true,
-		// 	isEdit: false,
-		// },
-	];
+	let comments = [];
 
+	containerPreloader.textContent = 'Пожалуйста подождите, загружаю комментарии...';
 
 	// запрос GET
-	fetch("https://wedev-api.sky.pro/api/v1/alisher-bazhenov/comments", {
-		method: "GET"
-	}).then((response) => {
-		// Запускаем преобразовываем "сырые" данные от API в json формат
-		response.json().then((responseData) => {
+	const fetchAndRenderTasks = () => {
+		return fetch("https://wedev-api.sky.pro/api/v1/alisher-bazhenov/comments", {
+			method: "GET"
+		})
+			.then((response) => {
+				containerPreloader.textContent = '';
+				return response.json();
+			})
+			.then((responseData) => {
 
-			const appComments = responseData.comments.map((comment) => {
-				return {
-					name: comment.author.name,
-					date: new Date(comment.date),
-					likes: comment.likes,
-					isLiked: false,
-					text: comment.text,
-				};
+				const appComments = responseData.comments.map((comment) => {
+					return {
+						name: comment.author.name,
+						date: new Date(comment.date),
+						likes: comment.likes,
+						isLiked: false,
+						text: comment.text,
+					};
+				});
+
+				comments = appComments;
+				renderComments();
 			});
-
-			// получили данные и рендерим их в приложении
-			comments = appComments;
-			// получили данные и рендерим их в приложении
-			// comments = responseData.comments;
-			renderComments();
-		});
-	});
+	}
 
 
 	const initEventListeners = () => {
@@ -119,7 +108,6 @@
 		}
 	};
 
-
 	const renderComments = () => {
 		const commentsHtml = comments.map((comment, index) => {
 			return `<li class="comment" data-index='${index}'>
@@ -143,7 +131,6 @@
 				</li>`;
 		}).join('');
 
-
 		listElement.innerHTML = commentsHtml;
 
 		initEventListeners();
@@ -164,7 +151,7 @@
 
 				if (comments[index].isEdit) {
 					comments[index].isEdit = false;
-					comments[index].comment = commentEditText.value;
+					comments[index].text = commentEditText.value;
 				} else {
 					comments[index].isEdit = true;
 				}
@@ -174,13 +161,14 @@
 		}
 	}
 
+	fetchAndRenderTasks();
 	renderComments();
 
 	const likesElements = document.querySelectorAll('.likes');
 
 
 	btnElement.addEventListener('click', () => {
-
+		addFormElement.classList.add('form-none');
 		nameInputElement.classList.remove('error');
 		nameTextAreaElement.classList.remove('error');
 
@@ -194,63 +182,44 @@
 		}
 
 		// подписываемся на успешное завершение запроса с помощью then
-		fetch("https://wedev-api.sky.pro/api/v1/alisher-bazhenov/comments", {
-			method: "POST",
-			body: JSON.stringify({
-				text: nameTextAreaElement.value.replaceAll("&", "&amp;")
-					.replaceAll("<", "&lt;")
-					.replaceAll(">", "&gt;")
-					.replaceAll('"', "&quot;")
-					.replaceAll("QUOTE_BEGIN", "<div class='quote'>")
-					.replaceAll("QUOTE_END", "</div>"),
-				name: nameInputElement.value.replaceAll("&", "&amp;")
-					.replaceAll("<", "&lt;")
-					.replaceAll(">", "&gt;")
-					.replaceAll('"', "&quot;")
-					.replaceAll("QUOTE_BEGIN", "<div class='quote'>")
-					.replaceAll("QUOTE_END", "</div>"),
+		const addTodo = () => {
+			containerPreloaderPost.textContent = 'Добавляется комментарий...';
+
+			return fetch("https://wedev-api.sky.pro/api/v1/alisher-bazhenov/comments", {
+				method: "POST",
+				body: JSON.stringify({
+					text: nameTextAreaElement.value.replaceAll("&", "&amp;")
+						.replaceAll("<", "&lt;")
+						.replaceAll(">", "&gt;")
+						.replaceAll('"', "&quot;")
+						.replaceAll("QUOTE_BEGIN", "<div class='quote'>")
+						.replaceAll("QUOTE_END", "</div>"),
+					name: nameInputElement.value.replaceAll("&", "&amp;")
+						.replaceAll("<", "&lt;")
+						.replaceAll(">", "&gt;")
+						.replaceAll('"', "&quot;")
+						.replaceAll("QUOTE_BEGIN", "<div class='quote'>")
+						.replaceAll("QUOTE_END", "</div>"),
+				})
 			})
-		}).then((response) => {
-			response.json().then((responseData) => {
+				.then((responseData) => {
+					return responseData;
+				})
+				.then((response) => {
+					return response.json();
+				})
+				.then((responseData) => {
+					return fetchAndRenderTasks();
+				})
+				.then((data) => {
+					containerPreloaderPost.textContent = '';
+					addFormElement.classList.remove('form-none');
 
-				fetch("https://wedev-api.sky.pro/api/v1/alisher-bazhenov/comments", {
-					method: "GET"
-				}).then((response) => {
-					// Запускаем преобразовываем "сырые" данные от API в json формат
-					response.json().then((responseData) => {
-
-						const appComments = responseData.comments.map((comment) => {
-							return {
-								name: comment.author.name,
-								date: new Date(comment.date),
-								likes: comment.likes,
-								isLiked: false,
-								text: comment.text,
-							};
-						});
-						// получили данные и рендерим их в приложении
-						comments = appComments;
-						renderComments();
-					});
-				});
+				})
+		}
 
 
-
-			});
-		});
-
-		// comments.push({
-		// 	name: nameInputElement.value,
-		// 	date: nowDate,
-		// 	comment: nameTextAreaElement.value.replaceAll("&", "&amp;")
-		// 		.replaceAll("<", "&lt;")
-		// 		.replaceAll(">", "&gt;")
-		// 		.replaceAll('"', "&quot;").replaceAll("QUOTE_BEGIN", "<div class='quote'>").replaceAll("QUOTE_END", "</div>"),
-		// 	likes: 0,
-		// 	isLiked: false,
-		// 	isEdit: false,
-		// });
-
+		addTodo();
 		renderComments();
 
 		nameInputElement.value = '';
