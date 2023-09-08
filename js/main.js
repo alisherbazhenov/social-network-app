@@ -1,17 +1,9 @@
-import { postComment, getComments } from "./api.js";
+import { getComments } from "./api.js";
+import { renderLogin } from "./loginPage.js";
 import { renderComments } from "./renderComments.js";
 
 // Код писать здесь
-const btnElement = document.querySelector('.add-form-button');
-const nameInputElement = document.querySelector('.add-form-name');
-const nameTextAreaElement = document.querySelector('.add-form-text');
-const myDate = new Date().toLocaleDateString().slice(0, 6) + new Date().toLocaleDateString().slice(-2);
-const nowDate = myDate + ' ' + new Date().toLocaleTimeString().slice(0, -3);
 
-
-const containerPreloaderPost = document.getElementById('container-preloader-post');
-const addFormElement = document.querySelector('.add-form');
-const likeBtnElement = document.querySelectorAll('.like-button');
 
 
 // COMMENTS нужно получать из хранилища данных
@@ -32,9 +24,13 @@ const fetchAndRenderTasks = () => {
 		});
 
 		comments = appComments;
-		renderComments({ comments });
+		renderComments({ comments, fetchAndRenderTasks });
 	});
 }
+
+
+renderLogin({ fetchAndRenderTasks });
+
 
 function delay(interval = 300) {
 	return new Promise((resolve) => {
@@ -64,10 +60,10 @@ export const initEventListeners = () => {
 					comments[index].isLiked = true;
 					comments[index].likes++;
 				}
-				renderComments({ comments });
+				renderComments({ comments, fetchAndRenderTasks });
 			});
 
-			renderComments({ comments });
+			renderComments({ comments, fetchAndRenderTasks });
 		});
 	}
 
@@ -105,65 +101,14 @@ export function functionEdit() {
 				comments[index].isEdit = true;
 			}
 
-			renderComments({ comments });
+			renderComments({ comments, fetchAndRenderTasks });
 		});
 	}
 }
 
 fetchAndRenderTasks();
-renderComments({ comments });
 
 
-btnElement.addEventListener('click', () => {
-
-	nameInputElement.classList.remove('error');
-	nameTextAreaElement.classList.remove('error');
 
 
-	if (nameInputElement.value === '') {
-		nameInputElement.classList.add('error');
-		return;
-	}
-	if (nameTextAreaElement.value === '') {
-		nameTextAreaElement.classList.add('error');
-		return;
-	}
-	// скрываем форму отправки
-	addFormElement.classList.add('form-none');
 
-
-	// подписываемся на успешное завершение запроса с помощью then
-	const addTodo = () => {
-		containerPreloaderPost.textContent = 'Добавляется комментарий...';
-
-		postComment({
-			text: nameTextAreaElement.value,
-			name: nameInputElement.value,
-		}).then((responseData) => {
-			return fetchAndRenderTasks();
-		})
-			.then((data) => {
-				containerPreloaderPost.textContent = '';
-				addFormElement.classList.remove('form-none');
-				nameInputElement.value = '';
-				nameTextAreaElement.value = '';
-			})
-			.catch((error) => {
-				containerPreloaderPost.textContent = '';
-				addFormElement.classList.remove('form-none');
-
-				if (error.message === 'Неверный запрос!') {
-					alert('Имя и комментарий должны быть не короче 3 символов');
-				} else if (error.message === "Ошибка сервера") {
-					alert('Сервер сломался, попробуй позже');
-					addTodo();
-				} else {
-					alert('Кажется у вас сломался интернет');
-				}
-			})
-	}
-
-	addTodo();
-	renderComments({ comments });
-
-});

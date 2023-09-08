@@ -1,24 +1,38 @@
+const commentsUrl = "https://wedev-api.sky.pro/api/v2/alisher-bazhenov/comments";
+const userUrl = 'https://wedev-api.sky.pro/api/user/login';
 
-const containerPreloader = document.getElementById('container-preloader');
+export let token;
 
-containerPreloader.textContent = 'Пожалуйста подождите, загружаю комментарии...';
+export const setToken = (newToken) => {
+	token = newToken;
+}
 
 export function getComments() {
-	return fetch("https://wedev-api.sky.pro/api/v1/alisher-bazhenov/comments", {
-		method: "GET"
+	// const containerPreloader = document.getElementById('container-preloader');
+	return fetch(commentsUrl, {
+		method: "GET",
+		headers: {
+			Authorization: `Bearer ${token}`,
+		}
 	})
 		.then((response) => {
+			if (response.status === 401) {
 
-			containerPreloader.textContent = '';
+				throw new Error("Нет авторизации");
+			}
+
+			// containerPreloader.textContent = '';
 			return response.json();
 
 		})
 }
 
 export function postComment({ text, name }) {
-	return fetch("https://wedev-api.sky.pro/api/v1/alisher-bazhenov/comments", {
-
+	return fetch(commentsUrl, {
 		method: "POST",
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
 		body: JSON.stringify({
 			text: text.replaceAll("&", "&amp;")
 				.replaceAll("<", "&lt;")
@@ -33,7 +47,7 @@ export function postComment({ text, name }) {
 				.replaceAll("QUOTE_BEGIN", "<div class='quote'>")
 				.replaceAll("QUOTE_END", "</div>"),
 			// forceError: true,
-		})
+		}),
 	})
 		.then((response) => {
 
@@ -47,4 +61,17 @@ export function postComment({ text, name }) {
 				return response.json();
 			}
 		})
+}
+
+export function login({ login, password }) {
+	return fetch(userUrl, {
+		method: "POST",
+		body: JSON.stringify({
+			login,
+			password,
+		}),
+	})
+		.then((response) => {
+			return response.json();
+		});
 }
