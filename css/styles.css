@@ -207,12 +207,17 @@ body {
 }
 
 #login-login,
-#login-password {
+#login-password,
+#login-name {
   padding: 11px 22px;
   font-size: 16px;
   font-family: Helvetica;
   border-radius: 8px;
   border: none;
+}
+
+#login-name {
+  margin-bottom: 12px;
 }
 
 #login-password {
@@ -233,6 +238,6 @@ body {
   color: #fff;
 }
 
-.authorization-link {
+#authorization-link {
   color: #fff;
 }

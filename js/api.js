@@ -7,8 +7,9 @@ export const setToken = (newToken) => {
 	token = newToken;
 }
 
+
 export function getComments() {
-	// const containerPreloader = document.getElementById('container-preloader');
+
 	return fetch(commentsUrl, {
 		method: "GET",
 		headers: {
@@ -17,13 +18,9 @@ export function getComments() {
 	})
 		.then((response) => {
 			if (response.status === 401) {
-
 				throw new Error("Нет авторизации");
 			}
-
-			// containerPreloader.textContent = '';
 			return response.json();
-
 		})
 }
 
