@@ -5,6 +5,7 @@ const listElement = document.getElementById('list');
 
 
 export function renderComments({ comments, fetchAndRenderTasks, name }) {
+
 	const commentsHtml = comments.map((comment, index) => {
 		return `<li class="comment" data-index='${index}'>
 					<div class="comment-header">
@@ -28,7 +29,10 @@ export function renderComments({ comments, fetchAndRenderTasks, name }) {
 	}).join('');
 
 
+
+
 	const appElement = document.getElementById("app");
+
 	const appHtml = `
 		<div class="container">
 		<div id="container-preloader">Пожалуйста подождите, загружаю комментарии..</div>
@@ -45,23 +49,21 @@ export function renderComments({ comments, fetchAndRenderTasks, name }) {
 	</div> 
 	`;
 
-	appElement.innerHTML = appHtml;
-	console.log(appHtml);
-	const authorizationElement = document.getElementById('authorization-link');
 
-	authorizationElement.addEventListener('click', (event) => {
+	appElement.innerHTML = appHtml;
+
+	const authorizationElement = document.getElementById('authorization-link');
+	authorizationElement?.addEventListener('click', (event) => {
 		event.preventDefault();
 		renderLogin({ comments, fetchAndRenderTasks });
 	})
 
 
-
 	const btnElement = document.getElementById('add-button');
-
 	const nameInputElement = document.querySelector('.add-form-name');
 	const nameTextAreaElement = document.querySelector('.add-form-text');
 
-	const containerPreloaderPost = document.getElementById('container-preloader-post');
+
 	const addFormElement = document.querySelector('.add-form');
 	const likeBtnElement = document.querySelectorAll('.like-button');
 
@@ -75,12 +77,9 @@ export function renderComments({ comments, fetchAndRenderTasks, name }) {
 
 
 function btnElementInit(btnElement, nameInputElement, nameTextAreaElement, addFormElement, fetchAndRenderTasks) {
+	const containerPreloaderPost = document.getElementById('container-preloader-post');
 
-	console.log(btnElement.innerHTML);
-
-
-	btnElement.addEventListener('click', () => {
-		console.log('Btn works!');
+	btnElement?.addEventListener('click', () => {
 
 		nameInputElement.classList.remove('error');
 		nameTextAreaElement.classList.remove('error');
@@ -96,11 +95,11 @@ function btnElementInit(btnElement, nameInputElement, nameTextAreaElement, addFo
 		}
 		// скрываем форму отправки
 		addFormElement.classList.add('form-none');
+		containerPreloaderPost.textContent = 'Добавляется комментарий...';
 
 
 		// подписываемся на успешное завершение запроса с помощью then
 		function addTodo() {
-			// containerPreloaderPost.textContent = 'Добавляется комментарий...';
 
 			postComment({
 				text: nameTextAreaElement.value,
@@ -109,13 +108,13 @@ function btnElementInit(btnElement, nameInputElement, nameTextAreaElement, addFo
 				return fetchAndRenderTasks();
 			})
 				.then((data) => {
-					// containerPreloaderPost.textContent = '';
+					containerPreloaderPost.textContent = '';
 					addFormElement.classList.remove('form-none');
 					nameInputElement.value = '';
 					nameTextAreaElement.value = '';
 				})
 				.catch((error) => {
-					// containerPreloaderPost.textContent = '';
+					containerPreloaderPost.textContent = '';
 					addFormElement.classList.remove('form-none');
 
 					if (error.message === 'Неверный запрос!') {

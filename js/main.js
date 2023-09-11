@@ -5,9 +5,9 @@ import { renderComments } from "./renderComments.js";
 // Код писать здесь
 
 
-
 // COMMENTS нужно получать из хранилища данных
 let comments = [];
+
 
 const RUDate = Intl.DateTimeFormat();
 
@@ -19,7 +19,6 @@ function fetchAndRenderTasks() {
 		const appComments = responseData.comments.map((comment) => {
 			return {
 				name: comment.author.name,
-				// date: new Date(comment.date),
 				date: RUDate.format(new Date(comment.date)),
 				likes: comment.likes,
 				isLiked: false,
@@ -28,18 +27,16 @@ function fetchAndRenderTasks() {
 		});
 
 		comments = appComments;
+
 		renderComments({ comments, fetchAndRenderTasks, name: window.userName });
 
-		// const containerPreloader = document.getElementById('container-preloader');
-		// containerPreloader.textContent = '';
-		// console.log(containerPreloader);
+		const containerPreloader = document.getElementById('container-preloader');
+		containerPreloader.textContent = '';
 	});
 }
 
 
-// renderLogin({ fetchAndRenderTasks });
 fetchAndRenderTasks();
-// renderComments({ comments, fetchAndRenderTasks });
 
 
 

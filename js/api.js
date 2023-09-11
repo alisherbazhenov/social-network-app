@@ -1,12 +1,14 @@
 const commentsUrl = "https://wedev-api.sky.pro/api/v2/alisher-bazhenov/comments";
 const userUrl = 'https://wedev-api.sky.pro/api/user/login';
+const userRegistr = 'https://wedev-api.sky.pro/api/user';
+
+
 
 export let token;
 
 export const setToken = (newToken) => {
 	token = newToken;
 }
-
 
 export function getComments() {
 
@@ -23,6 +25,7 @@ export function getComments() {
 			return response.json();
 		})
 }
+
 
 export function postComment({ text, name }) {
 	return fetch(commentsUrl, {
@@ -47,7 +50,6 @@ export function postComment({ text, name }) {
 		}),
 	})
 		.then((response) => {
-
 			if (response.status === 500) {
 				throw new Error('Ошибка сервера');
 			}
@@ -66,6 +68,20 @@ export function login({ login, password }) {
 		body: JSON.stringify({
 			login,
 			password,
+		}),
+	})
+		.then((response) => {
+			return response.json();
+		});
+}
+
+export function register({ login, password, name }) {
+	return fetch(userRegistr, {
+		method: "POST",
+		body: JSON.stringify({
+			login,
+			password,
+			name,
 		}),
 	})
 		.then((response) => {

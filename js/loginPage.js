@@ -1,4 +1,5 @@
-import { login, setToken, token } from "./api.js";
+import { login, setToken } from "./api.js";
+import { renderRegister } from "../renderRegistr.js";
 
 
 export function setName(newName) {
@@ -14,12 +15,20 @@ export function renderLogin({ fetchAndRenderTasks }) {
 			<input type="text" id="login-login" placeholder="Введите логин" value="" />
 			<input type="password" id="login-password" placeholder="Введите ваш пароль">
 			<button id="login-btn">Войти</button>
-			<a class="login-link" href="authorization.html">Зарегистрироваться</a>
+			<a id="register-link" class="login-link" href="#">Зарегистрироваться</a>
 		</div>
 	</div>
 	`;
 
 	appElement.innerHTML = loginHtml;
+
+	const registerElement = document.getElementById('register-link');
+
+
+	registerElement?.addEventListener('click', (event) => {
+		event.preventDefault();
+		renderRegister({ fetchAndRenderTasks });
+	})
 
 
 	const btnLoginElement = document.getElementById('login-btn');
