@@ -30,8 +30,7 @@ function fetchAndRenderTasks() {
 
 		renderComments({ comments, fetchAndRenderTasks, name: window.userName });
 
-		const containerPreloader = document.getElementById('container-preloader');
-		containerPreloader.textContent = '';
+
 	});
 }
 

@@ -1,8 +1,6 @@
 import { postComment, token } from "./api.js";
 import { renderLogin } from "./loginPage.js";
 
-const listElement = document.getElementById('list');
-
 
 export function renderComments({ comments, fetchAndRenderTasks, name }) {
 
@@ -27,8 +25,6 @@ export function renderComments({ comments, fetchAndRenderTasks, name }) {
 					</div>
 				</li>`;
 	}).join('');
-
-
 
 
 	const appElement = document.getElementById("app");
@@ -62,16 +58,15 @@ export function renderComments({ comments, fetchAndRenderTasks, name }) {
 	const btnElement = document.getElementById('add-button');
 	const nameInputElement = document.querySelector('.add-form-name');
 	const nameTextAreaElement = document.querySelector('.add-form-text');
-
-
 	const addFormElement = document.querySelector('.add-form');
-	const likeBtnElement = document.querySelectorAll('.like-button');
+
+	const containerPreloader = document.getElementById('container-preloader');
+	containerPreloader.textContent = '';
 
 
 	btnElementInit(btnElement, nameInputElement, nameTextAreaElement, addFormElement, fetchAndRenderTasks);
-	initEventListeners();
-	functionEdit();
-
+	initEventListeners(comments, fetchAndRenderTasks, nameTextAreaElement);
+	functionEdit(comments, fetchAndRenderTasks);
 
 };
 
@@ -134,7 +129,8 @@ function btnElementInit(btnElement, nameInputElement, nameTextAreaElement, addFo
 };
 
 
-function initEventListeners() {
+function initEventListeners(comments, fetchAndRenderTasks, nameTextAreaElement) {
+	if (!token) return;
 
 	const buttonElements = document.querySelectorAll('.like-button');
 
@@ -173,17 +169,17 @@ function initEventListeners() {
 	}
 };
 
-function functionEdit() {
+function functionEdit(comments, fetchAndRenderTasks) {
+	if (!token) return;
+
 	const commentEditText = document.querySelector('.comment-edit-text');
 
 	const editElements = document.querySelectorAll('.edits');
 
 	for (const edit of editElements) {
 		edit.addEventListener('click', () => {
-			// event.stopPropagation();
 
 			const index = edit.dataset.index;
-			console.log(index);
 
 			if (comments[index].isEdit) {
 				comments[index].isEdit = false;

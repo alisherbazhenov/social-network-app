@@ -1,5 +1,5 @@
 import { login, setToken } from "./api.js";
-import { renderRegister } from "../renderRegistr.js";
+import { renderRegister } from "./renderRegistr.js";
 
 
 export function setName(newName) {
@@ -42,7 +42,7 @@ export function renderLogin({ fetchAndRenderTasks }) {
 		}).then((responseData) => {
 
 			setToken(responseData.user.token);
-
+			localStorage.setItem("tokenSave", responseData.user.token);
 			setName(responseData.user.name);
 
 		})

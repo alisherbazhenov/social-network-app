@@ -2,8 +2,6 @@ const commentsUrl = "https://wedev-api.sky.pro/api/v2/alisher-bazhenov/comments"
 const userUrl = 'https://wedev-api.sky.pro/api/user/login';
 const userRegistr = 'https://wedev-api.sky.pro/api/user';
 
-
-
 export let token;
 
 export const setToken = (newToken) => {

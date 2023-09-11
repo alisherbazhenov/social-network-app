@@ -1,5 +1,5 @@
-import { register, setToken } from "./js/api.js";
-import { setName } from './js/loginPage.js';
+import { register, setToken } from "./api.js";
+import { setName } from './loginPage.js';
 
 export function renderRegister({ fetchAndRenderTasks }) {
 	const appElement = document.getElementById('app');
@@ -23,14 +23,19 @@ export function renderRegister({ fetchAndRenderTasks }) {
 	const nameRegisterElement = document.getElementById('login-name');
 
 	btnLoginElement.addEventListener('click', () => {
+		btnLoginElement.disabled = true;
 		register({
 			login: loginInputElement.value,
 			password: passwordInputElement.value,
 			name: nameRegisterElement.value,
 		}).then((responseData) => {
+
 			setToken(responseData.user.token);
 
+			localStorage.setItem("tokenSave", responseData.user.token);
+
 			setName(responseData.user.name);
+
 		})
 			.then(() => {
 				fetchAndRenderTasks();
