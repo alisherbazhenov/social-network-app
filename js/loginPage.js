@@ -1,11 +1,11 @@
 import { login, setToken, token } from "./api.js";
 
 
-export const setName = (newName) => {
+export function setName(newName) {
 	window.userName = newName;
 }
 
-export const renderLogin = ({ fetchAndRenderTasks }) => {
+export function renderLogin({ fetchAndRenderTasks }) {
 	const appElement = document.getElementById('app');
 	const loginHtml = `
 	<div class="container">

@@ -12,7 +12,7 @@ let comments = [];
 const RUDate = Intl.DateTimeFormat();
 
 // запрос GET
-const fetchAndRenderTasks = () => {
+function fetchAndRenderTasks() {
 
 	getComments().then((responseData) => {
 

@@ -4,7 +4,7 @@ import { renderLogin } from "./loginPage.js";
 const listElement = document.getElementById('list');
 
 
-export const renderComments = ({ comments, fetchAndRenderTasks, name }) => {
+export function renderComments({ comments, fetchAndRenderTasks, name }) {
 	const commentsHtml = comments.map((comment, index) => {
 		return `<li class="comment" data-index='${index}'>
 					<div class="comment-header">
@@ -46,7 +46,7 @@ export const renderComments = ({ comments, fetchAndRenderTasks, name }) => {
 	`;
 
 	appElement.innerHTML = appHtml;
-
+	console.log(appHtml);
 	const authorizationElement = document.getElementById('authorization-link');
 
 	authorizationElement.addEventListener('click', (event) => {
@@ -57,6 +57,7 @@ export const renderComments = ({ comments, fetchAndRenderTasks, name }) => {
 
 
 	const btnElement = document.getElementById('add-button');
+
 	const nameInputElement = document.querySelector('.add-form-name');
 	const nameTextAreaElement = document.querySelector('.add-form-text');
 
@@ -98,7 +99,7 @@ function btnElementInit(btnElement, nameInputElement, nameTextAreaElement, addFo
 
 
 		// подписываемся на успешное завершение запроса с помощью then
-		const addTodo = () => {
+		function addTodo() {
 			// containerPreloaderPost.textContent = 'Добавляется комментарий...';
 
 			postComment({
@@ -134,7 +135,7 @@ function btnElementInit(btnElement, nameInputElement, nameTextAreaElement, addFo
 };
 
 
-const initEventListeners = () => {
+function initEventListeners() {
 
 	const buttonElements = document.querySelectorAll('.like-button');
 
