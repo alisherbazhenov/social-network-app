@@ -1,6 +1,5 @@
-import { login, setToken } from "./api.js";
-import { renderRegister } from "./renderRegistr.js";
-
+import { login, setToken } from './api.js';
+import { renderRegister } from './renderRegistr.js';
 
 export function setName(newName) {
 	window.userName = newName;
@@ -24,12 +23,10 @@ export function renderLogin({ fetchAndRenderTasks }) {
 
 	const registerElement = document.getElementById('register-link');
 
-
 	registerElement?.addEventListener('click', (event) => {
 		event.preventDefault();
 		renderRegister({ fetchAndRenderTasks });
-	})
-
+	});
 
 	const btnLoginElement = document.getElementById('login-btn');
 	const loginInputElement = document.getElementById('login-login');
@@ -39,15 +36,14 @@ export function renderLogin({ fetchAndRenderTasks }) {
 		login({
 			login: loginInputElement.value,
 			password: passwordInputElement.value,
-		}).then((responseData) => {
-
-			setToken(responseData.user.token);
-			localStorage.setItem("tokenSave", responseData.user.token);
-			setName(responseData.user.name);
-
 		})
+			.then((responseData) => {
+				setToken(responseData.user.token);
+				localStorage.setItem('tokenSave', responseData.user.token);
+				setName(responseData.user.name);
+			})
 			.then(() => {
 				fetchAndRenderTasks();
-			})
+			});
 	});
 }
