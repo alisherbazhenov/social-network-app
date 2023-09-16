@@ -1,12 +1,12 @@
-import { login, setToken } from './api.js';
-import { renderRegister } from './renderRegistr.js';
+import { login, setToken } from './api.js'
+import { renderRegister } from './renderRegistr.js'
 
 export function setName(newName) {
-	window.userName = newName;
+	window.userName = newName
 }
 
 export function renderLogin({ fetchAndRenderTasks }) {
-	const appElement = document.getElementById('app');
+	const appElement = document.getElementById('app')
 	const loginHtml = `
 	<div class="container">
 		<div class="add-form">
@@ -17,20 +17,20 @@ export function renderLogin({ fetchAndRenderTasks }) {
 			<a id="register-link" class="login-link" href="#">Зарегистрироваться</a>
 		</div>
 	</div>
-	`;
+	`
 
-	appElement.innerHTML = loginHtml;
+	appElement.innerHTML = loginHtml
 
-	const registerElement = document.getElementById('register-link');
+	const registerElement = document.getElementById('register-link')
 
 	registerElement?.addEventListener('click', (event) => {
-		event.preventDefault();
-		renderRegister({ fetchAndRenderTasks });
-	});
+		event.preventDefault()
+		renderRegister({ fetchAndRenderTasks })
+	})
 
-	const btnLoginElement = document.getElementById('login-btn');
-	const loginInputElement = document.getElementById('login-login');
-	const passwordInputElement = document.getElementById('login-password');
+	const btnLoginElement = document.getElementById('login-btn')
+	const loginInputElement = document.getElementById('login-login')
+	const passwordInputElement = document.getElementById('login-password')
 
 	btnLoginElement.addEventListener('click', () => {
 		login({
@@ -38,12 +38,12 @@ export function renderLogin({ fetchAndRenderTasks }) {
 			password: passwordInputElement.value,
 		})
 			.then((responseData) => {
-				setToken(responseData.user.token);
-				localStorage.setItem('tokenSave', responseData.user.token);
-				setName(responseData.user.name);
+				setToken(responseData.user.token)
+				localStorage.setItem('token', responseData.user.token)
+				setName(responseData.user.name)
 			})
 			.then(() => {
-				fetchAndRenderTasks();
-			});
-	});
+				fetchAndRenderTasks()
+			})
+	})
 }

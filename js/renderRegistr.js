@@ -1,9 +1,9 @@
-import { register, setToken } from './api.js';
-import { setName } from './loginPage.js';
+import { register, setToken } from './api.js'
+import { setName } from './loginPage.js'
 
 export function renderRegister({ fetchAndRenderTasks }) {
-    const appElement = document.getElementById('app');
-    const loginHtml = `
+	const appElement = document.getElementById('app')
+	const loginHtml = `
 	<div class="container">
 	<div class="add-form">
 		<h2 class="login-title">Форма регистрации</h2>
@@ -13,31 +13,31 @@ export function renderRegister({ fetchAndRenderTasks }) {
 		<button id="login-btn">Зарегистрироваться</button>
 		<a class="login-link" href="index.html">Войти</a>
 	</div> 
-	`;
+	`
 
-    appElement.innerHTML = loginHtml;
+	appElement.innerHTML = loginHtml
 
-    const btnLoginElement = document.getElementById('login-btn');
-    const loginInputElement = document.getElementById('login-login');
-    const passwordInputElement = document.getElementById('login-password');
-    const nameRegisterElement = document.getElementById('login-name');
+	const btnLoginElement = document.getElementById('login-btn')
+	const loginInputElement = document.getElementById('login-login')
+	const passwordInputElement = document.getElementById('login-password')
+	const nameRegisterElement = document.getElementById('login-name')
 
-    btnLoginElement.addEventListener('click', () => {
-        btnLoginElement.disabled = true;
-        register({
-            login: loginInputElement.value,
-            password: passwordInputElement.value,
-            name: nameRegisterElement.value,
-        })
-            .then((responseData) => {
-                setToken(responseData.user.token);
+	btnLoginElement.addEventListener('click', () => {
+		btnLoginElement.disabled = true
+		register({
+			login: loginInputElement.value,
+			password: passwordInputElement.value,
+			name: nameRegisterElement.value,
+		})
+			.then((responseData) => {
+				setToken(responseData.user.token)
 
-                localStorage.setItem('tokenSave', responseData.user.token);
+				localStorage.setItem('tokenSave', responseData.user.token)
 
-                setName(responseData.user.name);
-            })
-            .then(() => {
-                fetchAndRenderTasks();
-            });
-    });
+				setName(responseData.user.name)
+			})
+			.then(() => {
+				fetchAndRenderTasks()
+			})
+	})
 }

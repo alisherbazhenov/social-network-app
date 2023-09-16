@@ -1,13 +1,12 @@
-const commentsUrl =
-	'https://wedev-api.sky.pro/api/v2/alisher-bazhenov/comments';
-const userUrl = 'https://wedev-api.sky.pro/api/user/login';
-const userRegistr = 'https://wedev-api.sky.pro/api/user';
+const commentsUrl = 'https://wedev-api.sky.pro/api/v2/alisher-bazhenov/comments'
+const userUrl = 'https://wedev-api.sky.pro/api/user/login'
+const userRegistr = 'https://wedev-api.sky.pro/api/user'
 
-export let token;
+export let token
 
 export const setToken = (newToken) => {
-	token = newToken;
-};
+	token = newToken
+}
 
 export function getComments() {
 	return fetch(commentsUrl, {
@@ -17,10 +16,10 @@ export function getComments() {
 		},
 	}).then((response) => {
 		if (response.status === 401) {
-			throw new Error('Нет авторизации');
+			throw new Error('Нет авторизации')
 		}
-		return response.json();
-	});
+		return response.json()
+	})
 }
 
 export function postComment({ text, name }) {
@@ -48,13 +47,13 @@ export function postComment({ text, name }) {
 		}),
 	}).then((response) => {
 		if (response.status === 500) {
-			throw new Error('Ошибка сервера');
+			throw new Error('Ошибка сервера')
 		} else if (response.status === 400) {
-			throw new Error('Неверный запрос!');
+			throw new Error('Неверный запрос!')
 		} else {
-			return response.json();
+			return response.json()
 		}
-	});
+	})
 }
 
 export function login({ login, password }) {
@@ -65,8 +64,8 @@ export function login({ login, password }) {
 			password,
 		}),
 	}).then((response) => {
-		return response.json();
-	});
+		return response.json()
+	})
 }
 
 export function register({ login, password, name }) {
@@ -78,6 +77,6 @@ export function register({ login, password, name }) {
 			name,
 		}),
 	}).then((response) => {
-		return response.json();
-	});
+		return response.json()
+	})
 }
