@@ -2,10 +2,19 @@ const commentsUrl = 'https://wedev-api.sky.pro/api/v2/alisher-bazhenov/comments'
 const userUrl = 'https://wedev-api.sky.pro/api/user/login'
 const userRegistr = 'https://wedev-api.sky.pro/api/user'
 
-export let token
+// export let token
 
+// export const setToken = (newToken) => {
+// 	token = newToken
+// }
+
+// Получаем токен из localStorage при загрузке страницы
+export let token = localStorage.getItem('token')
+
+// Функция для установки токена и сохранения его в localStorage
 export const setToken = (newToken) => {
 	token = newToken
+	localStorage.setItem('token', newToken)
 }
 
 export function getComments() {
@@ -33,16 +42,12 @@ export function postComment({ text, name }) {
 				.replaceAll('&', '&amp;')
 				.replaceAll('<', '&lt;')
 				.replaceAll('>', '&gt;')
-				.replaceAll('"', '&quot;')
-				.replaceAll('QUOTE_BEGIN', "<div class='quote'>")
-				.replaceAll('QUOTE_END', '</div>'),
+				.replaceAll('"', '&quot;'),
 			name: name
 				.replaceAll('&', '&amp;')
 				.replaceAll('<', '&lt;')
 				.replaceAll('>', '&gt;')
-				.replaceAll('"', '&quot;')
-				.replaceAll('QUOTE_BEGIN', "<div class='quote'>")
-				.replaceAll('QUOTE_END', '</div>'),
+				.replaceAll('"', '&quot;'),
 			// forceError: true,
 		}),
 	}).then((response) => {

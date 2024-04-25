@@ -24,7 +24,7 @@ export function renderComments({ comments, fetchAndRenderTasks, name }) {
 					<div class='likes'>
 					<span class='likes-counter'>${comment.likes}</span>
 					<button class='like-button ${
-						comment.isLiked ? ' -active-like' : ''
+						comment.isLiked ? ' active-like' : ''
 					}' data-index='${index}'>
 					</button>
 				</div>
@@ -156,13 +156,11 @@ function initEventListeners(
 
 	for (const buttonElement of buttonElements) {
 		buttonElement.addEventListener('click', (event) => {
-			// тормозим цепочку распростронения событий
 			event.stopPropagation()
-			// индекс = номер обьекта в массиве, получаем из дата атрибута кнопки на которую нажимаем
+
 			const index = buttonElement.dataset.index
 
-			// Пример использования:
-			delay(2000).then(() => {
+			delay(1000).then(() => {
 				if (comments[index].isLiked) {
 					comments[index].isLiked = false
 					comments[index].likes--
@@ -182,8 +180,7 @@ function initEventListeners(
 	for (const answer of answerElements) {
 		answer.addEventListener('click', () => {
 			const index = answer.dataset.index
-			// вариант со звездой
-			nameTextAreaElement.value = `QUOTE_BEGIN${comments[index].name}:\n${comments[index].text}QUOTE_END`
+			nameTextAreaElement.value = `${comments[index].name}:\n${comments[index].text}`
 		})
 	}
 }

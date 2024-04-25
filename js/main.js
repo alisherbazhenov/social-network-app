@@ -2,12 +2,8 @@ import { getComments } from './api.js'
 import { renderComments } from './renderComments.js'
 import { format } from 'date-fns'
 
-// Код писать здесь
-
-// COMMENTS нужно получать из хранилища данных
 let comments = []
 
-// запрос GET
 function fetchAndRenderTasks() {
 	getComments().then((responseData) => {
 		const appComments = responseData.comments.map((comment) => {
