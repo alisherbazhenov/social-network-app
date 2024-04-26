@@ -2,16 +2,9 @@ const commentsUrl = 'https://wedev-api.sky.pro/api/v2/alisher-bazhenov/comments'
 const userUrl = 'https://wedev-api.sky.pro/api/user/login'
 const userRegistr = 'https://wedev-api.sky.pro/api/user'
 
-// export let token
 
-// export const setToken = (newToken) => {
-// 	token = newToken
-// }
-
-// Получаем токен из localStorage при загрузке страницы
 export let token = localStorage.getItem('token')
 
-// Функция для установки токена и сохранения его в localStorage
 export const setToken = (newToken) => {
 	token = newToken
 	localStorage.setItem('token', newToken)
